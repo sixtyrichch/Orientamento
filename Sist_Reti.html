@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Page</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="website icon" type="png" href="logo.png">
+</head>
+<body>
+
+  <!-- Sidebar Profile -->
+  <div class="sidebar-profile" id="sidebar-profile" style="display:none;">
+    <img src="logo.png" alt="Profilo" class="profile-img" />
+    <span class="profile-name" id="profile-name"></span>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="auth-modal" style="display:none;">
+    <div class="auth-modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Accedi</h2>
+        <button id="close-modal" class="close-modal">&times;</button>
+      </div>
+      <input type="text" id="username" placeholder="Nome utente" />
+      <input type="password" id="password" placeholder="Password" />
+      <div class="auth-buttons">
+        <button id="submit-btn">Accedi</button>
+      </div>
+      <p id="toggle-auth" style="margin-top:10px; cursor:pointer; color:blue;">
+        Non hai un account? Registrati
+      </p>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <button class="sidebar-menu-button">
+    <span class="material-symbols-rounded">menu</span>
+  </button>
+
+<aside class="sidebar" id="sidebar">
+  <header class="sidebar-header">
+    <a href="profile.html" class="header-logo" title="Profilo">
+      <img src="logo.png" alt="Logo" />
+    </a>
+    <button class="sidebar-toggler" id="sidebar-toggle" title="Riduci/Apri sidebar">
+      <span class="material-symbols-rounded">chevron_left</span>
+    </button>
+  </header>
+
+  <div class="sidebar-profile" id="sidebar-profile" style="display:none;">
+    <img src="logo.png" alt="Profilo" class="profile-img" />
+    <span class="profile-name" id="profile-name"></span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list primary-nav">
+      <li class="nav-item">
+        <a href="dashboard.html" class="nav-link" data-section="dashboard" title="Dashboard">
+          <span class="material-symbols-rounded">dashboard</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+      </li>
+
+      <!-- Subjects dropdown -->
+      <li class="nav-item dropdown subjects-dropdown" id="subjects-dropdown">
+        <a href="#" class="nav-link dropdown-toggle" id="subjects-toggle" title="Subjects">
+          <span class="material-symbols-rounded">menu_book</span>
+          <span class="nav-label">Subjects</span>
+        </a>
+
+        <ul class="dropdown-menu" id="subjects-menu">
+          <li><a href="Tecn_Inf.html" class="dropdown-item">Tecnologie informatiche</a></li>
+          <li><a href="Scie_App.html" class="dropdown-item">Scienze e tecnologie applicate</a></li>
+          <li><a href="Sist_Reti.html" class="dropdown-item">Sistemi e reti</a></li>
+          <li><a href="Info.html" class="dropdown-item">Informatica</a></li>
+          <li><a href="Telec.html" class="dropdown-item">Telecomunicazioni</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <ul class="nav-list secondary-nav" style="margin-top:auto;"></ul>
+  </nav>
+</aside>
+
+  <!-- Main content -->
+  <div id="sist-section" class="section main-content"></div>
+  <script src="script.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
