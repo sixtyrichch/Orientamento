@@ -3,18 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Page</title>
+  <title>Sistemi e reti</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link rel="website icon" type="png" href="logo.png">
 </head>
 <body>
-
-  <!-- Sidebar Profile -->
-  <div class="sidebar-profile" id="sidebar-profile" style="display:none;">
-    <img src="logo.png" alt="Profilo" class="profile-img" />
-    <span class="profile-name" id="profile-name"></span>
-  </div>
 
   <!-- Auth Modal -->
   <div id="auth-modal" class="auth-modal" style="display:none;">
@@ -23,14 +17,11 @@
         <h2 id="modal-title">Accedi</h2>
         <button id="close-modal" class="close-modal">&times;</button>
       </div>
-      <input type="text" id="username" placeholder="Nome utente" />
+      <input type="text" id="username" placeholder="E-mail" />
       <input type="password" id="password" placeholder="Password" />
       <div class="auth-buttons">
         <button id="submit-btn">Accedi</button>
       </div>
-      <p id="toggle-auth" style="margin-top:10px; cursor:pointer; color:blue;">
-        Non hai un account? Registrati
-      </p>
     </div>
   </div>
 
@@ -41,18 +32,11 @@
 
   <aside class="sidebar" id="sidebar">
     <header class="sidebar-header">
-      <a href="profile.html" class="header-logo" title="Profilo">
-        <img src="logo.png" alt="Logo" />
-      </a>
+      <!--<img src="logo.png" alt="Logo" />-->
       <button class="sidebar-toggler" id="sidebar-toggle" title="Riduci/Apri sidebar">
         <span class="material-symbols-rounded">chevron_left</span>
       </button>
     </header>
-
-    <div class="sidebar-profile" id="sidebar-profile" style="display:none;">
-      <img src="logo.png" alt="Profilo" class="profile-img" />
-      <span class="profile-name" id="profile-name"></span>
-    </div>
 
     <nav class="sidebar-nav">
       <ul class="nav-list primary-nav">

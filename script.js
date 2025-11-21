@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  localStorage.removeItem("users");
+  localStorage.removeItem("username");
+
 
   // --- ELEMENTI ---
   const sidebarProfile = document.getElementById('sidebar-profile');
@@ -26,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- UTENTI ---
   let users = JSON.parse(localStorage.getItem("users")) || [
     { username: "admin", password: "davinci2026", canUpload: true },
-    { username: "user1", password: "123", canUpload: false }
+    { username: "bb", password: "bb", canUpload: true }
   ];
   let currentUser = localStorage.getItem("username");
 
@@ -60,17 +63,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if(profileName) profileName.textContent=currentUser;
 
       if(secondaryNav){
-        if(currentUser==="admin"){
-          const liUpload = document.createElement("li");
-          liUpload.classList.add("nav-item");
-          liUpload.innerHTML='<a href="#" class="nav-link" id="upload-link"><span class="material-symbols-rounded">photo_camera</span><span class="nav-label">Carica Foto</span></a>';
-          secondaryNav.appendChild(liUpload);
-          liUpload.addEventListener("click", e=>{
-            e.preventDefault();
-            const activeSection = Object.keys(sections).find(k=>sections[k].style.display==="block")||'dashboard';
-            showUploadSection(activeSection);
-          });
-        }
+        const userObj = users.find(u => u.username === currentUser);
+
+if (userObj && userObj.canUpload) {
+  const liUpload = document.createElement("li");
+  liUpload.classList.add("nav-item");
+  liUpload.innerHTML = `
+    <a href="#" class="nav-link" id="upload-link">
+      <span class="material-symbols-rounded">photo_camera</span>
+      <span class="nav-label">Carica Foto</span>
+    </a>
+  `;
+  secondaryNav.appendChild(liUpload);
+  liUpload.addEventListener("click", e=>{
+    e.preventDefault();
+    const activeSection = Object.keys(sections).find(k=>sections[k].style.display==="block")||'dashboard';
+    showUploadSection(activeSection);
+  });
+}
+
         const liOut = document.createElement("li");
         liOut.classList.add("nav-item");
         liOut.innerHTML='<a href="#" class="nav-link" id="sign-out"><span class="material-symbols-rounded">logout</span><span class="nav-label">Sign Out</span></a>';
@@ -96,22 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- MODAL LOGIN / REGISTER ---
   let isLoginMode = true;
-  if(toggleAuth){
-    toggleAuth.addEventListener("click", ()=>{
-      isLoginMode=!isLoginMode;
-      if(isLoginMode){
-        modalTitle.textContent="Accedi";
-        submitBtn.textContent="Accedi";
-        toggleAuth.textContent="Non hai un account? Registrati";
-      } else {
-        modalTitle.textContent="Registrati";
-        submitBtn.textContent="Registrati";
-        toggleAuth.textContent="Hai già un account? Accedi";
-      }
-      usernameInput.value="";
-      passwordInput.value="";
-    });
-  }
+
+// Disabilita completamente la registrazione
+if (toggleAuth) {
+  toggleAuth.style.display = "none"; // nasconde il bottone per registrarsi
+}
+
   const closeModalBtn = document.getElementById("close-modal");
   if(closeModalBtn) closeModalBtn.addEventListener("click", ()=>{ if(authModal) authModal.style.display="none"; });
 
@@ -120,25 +121,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const username=usernameInput.value.trim();
       const password=passwordInput.value;
       if(!username||!password) return alert("Inserisci username e password!");
-      if(isLoginMode){
-        const userObj=users.find(u=>u.username===username&&u.password===password);
-        if(!userObj) return alert("Credenziali non valide!");
-        currentUser=username;
-        localStorage.setItem("username",currentUser);
-        if(authModal) authModal.style.display="none";
-        updateSidebar();
-        showPosts();
-      } else {
-        if(users.find(u=>u.username===username)) return alert("Utente già registrato!");
-        users.push({username,password,canUpload:false});
-        localStorage.setItem("users",JSON.stringify(users));
-        alert("Registrazione completata!");
-        isLoginMode=true;
-        modalTitle.textContent="Accedi";
-        submitBtn.textContent="Accedi";
-        toggleAuth.textContent="Non hai un account? Registrati";
-      }
-    });
+        const userObj = users.find(u => u.username === username && u.password === password);
+        if (!userObj) return alert("Credenziali non valide!");
+          currentUser = username;
+          localStorage.setItem("username", currentUser);
+        if (authModal) authModal.style.display = "none";
+          updateSidebar();
+          showPosts();
+        });
   }
 
   // --- SUBJECTS DROPDOWN ---
@@ -164,7 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- UPLOAD E POSTS ---
   window.showUploadSection=showUploadSection;
   function showUploadSection(defaultSection='dashboard'){
-    if(!currentUser||currentUser!=="admin"){ alert("Devi essere loggato come admin!"); return; }
+  const userObj = users.find(u => u.username === currentUser);
+  if (!userObj || !userObj.canUpload) {
+    alert("Non hai i permessi per caricare contenuti!");
+    return;
+  }
     const targetSection = sections[defaultSection];
     if(!targetSection) return console.error("Sezione non trovata:",defaultSection);
     let existing = targetSection.querySelector(".upload-card"); if(existing) existing.remove();
