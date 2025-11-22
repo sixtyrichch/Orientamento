@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* =====================
-     ELEMENTI PRINCIPALI
-  ===================== */
+  // ELEMENTI PRINCIPALI
+
   const sidebar = document.getElementById('sidebar');
   const toggleBtn = document.getElementById('sidebar-toggle');
   const subjectsDropdown = document.getElementById('subjects-dropdown');
@@ -13,16 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
 
-  // Sezioni contenuto dinamico
   const sections = {};
   document.querySelectorAll("[id$='-section']").forEach(sec => {
     const key = sec.id.replace('-section', '');
     sections[key] = sec;
   });
 
-  /* =====================
-     UTENTI E LOGIN
-  ===================== */
+  // UTENTI AUTORIZZATI E LOGIN
+
   let users = JSON.parse(localStorage.getItem("users")) || [
     { email:"admin", password:"davinci2026", canUpload:true },
     { email:"bb", password:"bb", canUpload:true }
@@ -30,9 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentUser = localStorage.getItem("email");
 
-  /* =====================
-     SIDEBAR SECONDARIA
-  ===================== */
   function clearSecondaryNav() {
     if(secondaryNav) secondaryNav.innerHTML = '';
   }
@@ -61,8 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(currentUser) {
       const userObj = users.find(u => u.email === currentUser);
-
-      // Link upload se l'utente ha permesso
       if(userObj?.canUpload) {
         const liUpload = document.createElement("li");
         liUpload.classList.add("nav-item");
@@ -74,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         secondaryNav.appendChild(liUpload);
       }
 
-      // Link Sign Out
       const liOut = document.createElement("li");
       liOut.classList.add("nav-item");
       liOut.innerHTML = `
@@ -97,9 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* =====================
-     MODAL LOGIN
-  ===================== */
+  // MODAL LOGIN
+
   document.getElementById("close-modal")?.addEventListener("click", () => {
     authModal.style.display = "none";
   });
@@ -128,9 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showPosts();
   });
 
-  /* =====================
-     SIDEBAR TOGGLE
-  ===================== */
+  // SIDEBAR TOGGLE
   toggleBtn?.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
     subjectsDropdown?.classList.remove("open");
@@ -143,13 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
 
-  /* =====================
-     VISUALIZZAZIONE POST
-  ===================== */
+  // PODT
   function showPosts() {
     const posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-    // Pulizia vecchi post
     Object.values(sections).forEach(sec => sec.querySelectorAll('.post-card').forEach(c => c.remove()));
 
     posts.forEach((post, index) => {
@@ -159,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const div = document.createElement("div");
       div.classList.add("post-card");
 
-      // File associati
       let fileHTML = "";
       if(post.files && post.files.length) {
         fileHTML = '<div class="post-files" style="display:flex; gap:10px; flex-wrap:wrap;">';
@@ -186,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
       sectionDiv.appendChild(div);
     });
 
-    // Pulsante elimina post
     document.querySelectorAll(".delete-btn").forEach(btn => {
       btn.addEventListener("click", e => {
         const idx = parseInt(e.target.dataset.index);
@@ -198,15 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* =====================
-     UPLOAD CONTENUTI
-  ===================== */
+  // UPLOAD
+
   const uploadBtn = document.querySelector(".upload-btn");
   const fileInput = document.querySelector(".upload-file");
   const previewDiv = document.querySelector(".upload-preview");
   const previewImg = document.getElementById("preview-img");
 
-  // Anteprima immagine
   fileInput?.addEventListener("change", e => {
     const files = e.target.files;
     if(!files || files.length === 0) {
@@ -227,7 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Caricamento post
   uploadBtn?.addEventListener("click", () => {
     const title = document.querySelector(".upload-title").value.trim() || "Senza titolo";
     const desc = document.querySelector(".upload-desc").value.trim();
@@ -259,7 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       localStorage.setItem("posts", JSON.stringify(posts));
 
-      // Reset campi
       document.querySelector(".upload-title").value = "";
       document.querySelector(".upload-desc").value = "";
       fileInput.value = "";
@@ -276,9 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else savePost(null);
   });
 
-  /* =====================
-     INIT
-  ===================== */
   updateSidebar();
   showPosts();
 });
