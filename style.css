@@ -6,7 +6,8 @@ body { min-height:100vh; background:#F1F3FF; display:flex; }
 .sidebar { width:300px; background:#151A2D; color:#fff; height:100vh; position:fixed; display:flex; flex-direction:column; }
 .sidebar-header { display:flex; align-items:center; justify-content:space-between; padding:20px; }
 .header-logo img { width:46px; border-radius:50%; cursor:pointer; }
-.sidebar-toggler { background:#EEF2FF; border:none; cursor:pointer; padding:5px; border-radius:8px; }
+.logo img {width: 50px; height: 50px; margin-top: 7; border-radius: 50%; object-fit: cover; }
+.sidebar-toggler { background:#EEF2FF; width: 24; height: 24; border:none; cursor:pointer; padding:5px; border-radius:5px; }
 .sidebar-nav { margin-top:20px; display:flex; flex-direction:column; flex:1; }
 .nav-list { list-style:none; padding-left:0; }
 .nav-item { margin-bottom:10px; }
