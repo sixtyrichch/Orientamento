@@ -1,268 +1,284 @@
 document.addEventListener('DOMContentLoaded', () => {
-  localStorage.removeItem("users");
-  localStorage.removeItem("username");
 
-
-  // --- ELEMENTI ---
-  const sidebarProfile = document.getElementById('sidebar-profile');
-  const profileName = document.getElementById('profile-name');
-  const toggleAuth = document.getElementById('toggle-auth');
-  const modalTitle = document.getElementById('modal-title');
-  const submitBtn = document.getElementById('submit-btn');
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
-  const authModal = document.getElementById('auth-modal');
+  /* =====================
+     ELEMENTI PRINCIPALI
+  ===================== */
   const sidebar = document.getElementById('sidebar');
   const toggleBtn = document.getElementById('sidebar-toggle');
   const subjectsDropdown = document.getElementById('subjects-dropdown');
   const subjectsToggle = document.getElementById('subjects-toggle');
-  const subjectsMenu = document.getElementById('subjects-menu');
   const secondaryNav = document.querySelector('.secondary-nav');
+  const authModal = document.getElementById('auth-modal');
+  const submitBtn = document.getElementById('submit-btn');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
 
-  // --- SECTIONS ---
+  // Sezioni contenuto dinamico
   const sections = {};
-  ['dashboard', 'tecn', 'scie', 'sist', 'info', 'telec'].forEach(id => {
-    const el = document.getElementById(id + '-section');
-    if(el) sections[id] = el;
+  document.querySelectorAll("[id$='-section']").forEach(sec => {
+    const key = sec.id.replace('-section', '');
+    sections[key] = sec;
   });
 
-  // --- UTENTI ---
+  /* =====================
+     UTENTI E LOGIN
+  ===================== */
   let users = JSON.parse(localStorage.getItem("users")) || [
-    { username: "admin", password: "davinci2026", canUpload: true },
-    { username: "bb", password: "bb", canUpload: true }
+    { email:"admin", password:"davinci2026", canUpload:true },
+    { email:"bb", password:"bb", canUpload:true }
   ];
-  let currentUser = localStorage.getItem("username");
 
-  // --- SHOW / HIDE SECTION ---
-  function showSection(key) {
-    Object.keys(sections).forEach(k => {
-      if (sections[k]) sections[k].style.display = k === key ? "block" : "none";
-    });
-  }
+  let currentUser = localStorage.getItem("email");
 
-  // --- SIDEBAR SECONDARY NAV ---
-  function clearSecondaryNav(){
+  /* =====================
+     SIDEBAR SECONDARIA
+  ===================== */
+  function clearSecondaryNav() {
     if(secondaryNav) secondaryNav.innerHTML = '';
   }
 
   function showLoginButton() {
     if(!secondaryNav) return;
     clearSecondaryNav();
+
     const li = document.createElement("li");
     li.classList.add("nav-item");
-    li.innerHTML = '<a href="#" class="nav-link" id="login-link"><span class="material-symbols-rounded">login</span><span class="nav-label">Accedi</span></a>';
+    li.innerHTML = `
+      <a href="#" class="nav-link" id="login-link">
+        <span class="material-symbols-rounded">login</span>
+        <span class="nav-label">Accedi</span>
+      </a>`;
     secondaryNav.appendChild(li);
-    const loginLink = document.getElementById("login-link");
-    if(loginLink) loginLink.addEventListener("click", e => { e.preventDefault(); if(authModal) authModal.style.display="flex"; });
+
+    document.getElementById("login-link")?.addEventListener("click", e => {
+      e.preventDefault();
+      authModal.style.display = "flex";
+    });
   }
 
   function updateSidebar() {
     clearSecondaryNav();
-    if(currentUser){
-      if(sidebarProfile) sidebarProfile.style.display="flex";
-      if(profileName) profileName.textContent=currentUser;
 
-      if(secondaryNav){
-        const userObj = users.find(u => u.username === currentUser);
+    if(currentUser) {
+      const userObj = users.find(u => u.email === currentUser);
 
-if (userObj && userObj.canUpload) {
-  const liUpload = document.createElement("li");
-  liUpload.classList.add("nav-item");
-  liUpload.innerHTML = `
-    <a href="#" class="nav-link" id="upload-link">
-      <span class="material-symbols-rounded">photo_camera</span>
-      <span class="nav-label">Carica Foto</span>
-    </a>
-  `;
-  secondaryNav.appendChild(liUpload);
-  liUpload.addEventListener("click", e=>{
-    e.preventDefault();
-    const activeSection = Object.keys(sections).find(k=>sections[k].style.display==="block")||'dashboard';
-    showUploadSection(activeSection);
-  });
-}
-
-        const liOut = document.createElement("li");
-        liOut.classList.add("nav-item");
-        liOut.innerHTML='<a href="#" class="nav-link" id="sign-out"><span class="material-symbols-rounded">logout</span><span class="nav-label">Sign Out</span></a>';
-        secondaryNav.appendChild(liOut);
-        const signOutBtn = document.getElementById("sign-out");
-        if(signOutBtn){
-          signOutBtn.addEventListener("click", e=>{
-            e.preventDefault();
-            localStorage.removeItem("username");
-            currentUser = null;
-            if(sidebarProfile) sidebarProfile.style.display="none";
-            showLoginButton();
-            showPosts();
-          });
-        }
+      // Link upload se l'utente ha permesso
+      if(userObj?.canUpload) {
+        const liUpload = document.createElement("li");
+        liUpload.classList.add("nav-item");
+        liUpload.innerHTML = `
+          <a href="upload.html" class="nav-link" id="upload-link">
+            <span class="material-symbols-rounded">photo_camera</span>
+            <span class="nav-label">Carica Contenuti</span>
+          </a>`;
+        secondaryNav.appendChild(liUpload);
       }
-    } else {
-      if(sidebarProfile) sidebarProfile.style.display="none";
-      showLoginButton();
-      showPosts();
-    }
-  }
 
-  // --- MODAL LOGIN / REGISTER ---
-  let isLoginMode = true;
+      // Link Sign Out
+      const liOut = document.createElement("li");
+      liOut.classList.add("nav-item");
+      liOut.innerHTML = `
+        <a href="#" class="nav-link" id="sign-out">
+          <span class="material-symbols-rounded">logout</span>
+          <span class="nav-label">Sign Out</span>
+        </a>`;
+      secondaryNav.appendChild(liOut);
 
-// Disabilita completamente la registrazione
-if (toggleAuth) {
-  toggleAuth.style.display = "none"; // nasconde il bottone per registrarsi
-}
-
-  const closeModalBtn = document.getElementById("close-modal");
-  if(closeModalBtn) closeModalBtn.addEventListener("click", ()=>{ if(authModal) authModal.style.display="none"; });
-
-  if(submitBtn){
-    submitBtn.addEventListener("click", ()=>{
-      const username=usernameInput.value.trim();
-      const password=passwordInput.value;
-      if(!username||!password) return alert("Inserisci username e password!");
-        const userObj = users.find(u => u.username === username && u.password === password);
-        if (!userObj) return alert("Credenziali non valide!");
-          currentUser = username;
-          localStorage.setItem("username", currentUser);
-        if (authModal) authModal.style.display = "none";
-          updateSidebar();
-          showPosts();
-        });
-  }
-
-  // --- SUBJECTS DROPDOWN ---
-  if(subjectsToggle && subjectsDropdown && subjectsMenu){
-    subjectsToggle.addEventListener("click", e=>{
-      e.preventDefault();
-      const isOpen = subjectsDropdown.classList.toggle("open");
-      subjectsMenu.style.display=isOpen?"flex":"none";
-    });
-  }
-
-  // --- SIDEBAR COLLAPSE ---
-  if(toggleBtn && sidebar){
-    toggleBtn.addEventListener("click", ()=>{
-      sidebar.classList.toggle("collapsed");
-      if(subjectsDropdown && subjectsMenu){
-        subjectsDropdown.classList.remove("open");
-        subjectsMenu.style.display="none";
-      }
-    });
-  }
-
-  // --- UPLOAD E POSTS ---
-  window.showUploadSection=showUploadSection;
-  function showUploadSection(defaultSection='dashboard'){
-  const userObj = users.find(u => u.username === currentUser);
-  if (!userObj || !userObj.canUpload) {
-    alert("Non hai i permessi per caricare contenuti!");
-    return;
-  }
-    const targetSection = sections[defaultSection];
-    if(!targetSection) return console.error("Sezione non trovata:",defaultSection);
-    let existing = targetSection.querySelector(".upload-card"); if(existing) existing.remove();
-    const uploadDiv = document.createElement("div");
-    uploadDiv.classList.add("upload-card");
-    uploadDiv.innerHTML=`
-      <h3>Carica contenuti</h3>
-      <input type="text" class="upload-text" placeholder="Testo facoltativo...">
-      <input type="file" class="upload-file" accept="image/*">
-      <select class="upload-destination">
-        <option value="dashboard">Dashboard</option>
-        <option value="tecn">Tecnologie informatiche</option>
-        <option value="scie">Scienze e tecnologie applicate</option>
-        <option value="sist">Sistemi e reti</option>
-        <option value="info">Informatica</option>
-        <option value="telec">Telecomunicazioni</option>
-      </select>
-      <button class="upload-btn">Carica</button>
-    `;
-    targetSection.prepend(uploadDiv);
-
-    function resizeImage(file,maxWidth=800,callback){
-      const reader=new FileReader();
-      reader.onload=e=>{
-        const img=new Image();
-        img.onload=()=>{
-          const canvas=document.createElement("canvas");
-          const scale=Math.min(maxWidth/img.width,1);
-          canvas.width=img.width*scale;
-          canvas.height=img.height*scale;
-          canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-          canvas.toBlob(blob=>callback(blob||file),"image/jpeg",0.7);
-        };
-        img.src=e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    uploadDiv.querySelector(".upload-btn").addEventListener("click",()=>{
-      const text = uploadDiv.querySelector(".upload-text").value;
-      const fileInput = uploadDiv.querySelector(".upload-file");
-      const dest = uploadDiv.querySelector(".upload-destination").value;
-      if(!fileInput.files.length) return alert("Seleziona immagine!");
-      const file=fileInput.files[0];
-      resizeImage(file,800,resizedBlob=>{
-        const reader=new FileReader();
-        reader.onload=e=>{
-          let posts=JSON.parse(localStorage.getItem("posts"))||[];
-          posts.push({owner:currentUser,text,imgData:e.target.result,section:dest});
-          try{
-            localStorage.setItem("posts",JSON.stringify(posts));
-            alert("Caricato!");
-            uploadDiv.remove();
-            showPosts();
-          }catch(err){ if(err.name==="QuotaExceededError"){alert("Immagine troppo grande!");} else console.error(err);}
-        };
-        reader.readAsDataURL(resizedBlob);
+      document.getElementById("sign-out")?.addEventListener("click", e => {
+        e.preventDefault();
+        localStorage.removeItem("email");
+        currentUser = null;
+        showLoginButton();
+        showPosts();
       });
-    });
+
+    } else {
+      showLoginButton();
+    }
   }
 
-    function showPosts(){
-    const posts=JSON.parse(localStorage.getItem("posts"))||[];
+  /* =====================
+     MODAL LOGIN
+  ===================== */
+  document.getElementById("close-modal")?.addEventListener("click", () => {
+    authModal.style.display = "none";
+  });
 
-    // rimuove tutti i post esistenti
-    Object.keys(sections).forEach(key=>{
-      const sectionDiv=sections[key];
-      if(!sectionDiv) return;
-      sectionDiv.querySelectorAll('.post-card').forEach(card=>card.remove());
-    });
+  submitBtn?.addEventListener("click", () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
-    // aggiunge i post
-    posts.forEach((post,index)=>{
+    if(!email || !password) {
+      alert("Inserisci email e password!");
+      return;
+    }
+
+    const userObj = users.find(u => u.email === email && u.password === password);
+
+    if(!userObj) {
+      alert("Credenziali non valide!");
+      return;
+    }
+
+    currentUser = email;
+    localStorage.setItem("email", currentUser);
+    authModal.style.display = "none";
+
+    updateSidebar();
+    showPosts();
+  });
+
+  /* =====================
+     SIDEBAR TOGGLE
+  ===================== */
+  toggleBtn?.addEventListener("click", () => {
+    sidebar.classList.toggle("collapsed");
+    subjectsDropdown?.classList.remove("open");
+  });
+
+  subjectsToggle?.addEventListener("click", e => {
+    e.preventDefault();
+    subjectsDropdown.classList.toggle("open");
+  });
+
+  
+
+  /* =====================
+     VISUALIZZAZIONE POST
+  ===================== */
+  function showPosts() {
+    const posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+    // Pulizia vecchi post
+    Object.values(sections).forEach(sec => sec.querySelectorAll('.post-card').forEach(c => c.remove()));
+
+    posts.forEach((post, index) => {
       const sectionDiv = sections[post.section];
       if(!sectionDiv) return;
 
       const div = document.createElement("div");
       div.classList.add("post-card");
-      div.innerHTML=`
+
+      // File associati
+      let fileHTML = "";
+      if(post.files && post.files.length) {
+        fileHTML = '<div class="post-files" style="display:flex; gap:10px; flex-wrap:wrap;">';
+        post.files.forEach(file => {
+          let icon = "❓";
+          if(file.type.startsWith("audio/")) icon = "🎵";
+          else if(file.type.startsWith("video/")) icon = "🎥";
+          else if(file.type.startsWith("image/")) icon = "🖼️";
+
+          fileHTML += `<a href="${file.data}" download="${file.name}" title="${file.name}" class="file-link" style="font-size:2rem; text-decoration:none;">${icon}</a>`;
+        });
+        fileHTML += "</div>";
+      }
+
+      div.innerHTML = `
         <div class="post-content">
-          ${post.imgData ? `<img src="${post.imgData}">` : ''}
-          <p><strong>${post.owner}</strong>: ${post.text}</p>
+          <div class="post-title">${post.title || "Senza titolo"}</div>
+          <div class="post-text"><strong>${post.owner}</strong>: ${post.text}</div>
         </div>
-        ${currentUser==='admin'?`<button data-index="${index}" class="delete-btn">Elimina</button>`:''}
+        ${post.imgData ? `<div class="post-img"><img src="${post.imgData}" alt="Post Image"></div>` : fileHTML}
+        ${currentUser === "admin" ? `<button data-index="${index}" class="delete-btn">Elimina</button>` : ""}
       `;
+
       sectionDiv.appendChild(div);
     });
 
-    // gestisce il bottone elimina
-    document.querySelectorAll(".delete-btn").forEach(btn=>{
-      btn.addEventListener("click",e=>{
-        const idx=parseInt(e.target.dataset.index);
-        let posts=JSON.parse(localStorage.getItem("posts"));
-        posts.splice(idx,1);
-        localStorage.setItem("posts",JSON.stringify(posts));
+    // Pulsante elimina post
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", e => {
+        const idx = parseInt(e.target.dataset.index);
+        let posts = JSON.parse(localStorage.getItem("posts"));
+        posts.splice(idx, 1);
+        localStorage.setItem("posts", JSON.stringify(posts));
         showPosts();
       });
     });
   }
 
-  // --- INIT ---
+  /* =====================
+     UPLOAD CONTENUTI
+  ===================== */
+  const uploadBtn = document.querySelector(".upload-btn");
+  const fileInput = document.querySelector(".upload-file");
+  const previewDiv = document.querySelector(".upload-preview");
+  const previewImg = document.getElementById("preview-img");
+
+  // Anteprima immagine
+  fileInput?.addEventListener("change", e => {
+    const files = e.target.files;
+    if(!files || files.length === 0) {
+      previewDiv.style.display = "none";
+      return;
+    }
+
+    const imgFile = Array.from(files).find(f => f.type.startsWith("image/"));
+    if(imgFile) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src = e.target.result;
+        previewDiv.style.display = "flex";
+      };
+      reader.readAsDataURL(imgFile);
+    } else {
+      previewDiv.style.display = "none";
+    }
+  });
+
+  // Caricamento post
+  uploadBtn?.addEventListener("click", () => {
+    const title = document.querySelector(".upload-title").value.trim() || "Senza titolo";
+    const desc = document.querySelector(".upload-desc").value.trim();
+    const dest = document.querySelector(".upload-destination").value;
+    const files = fileInput.files;
+
+    if(!files || files.length === 0) {
+      alert("Seleziona almeno un file!");
+      return;
+    }
+
+    const imgFile = Array.from(files).find(f => f.type.startsWith("image/"));
+
+    const otherFiles = Array.from(files).map(f => ({
+      name: f.name,
+      type: f.type,
+      data: URL.createObjectURL(f)
+    }));
+
+    function savePost(imgData = null) {
+      const posts = JSON.parse(localStorage.getItem("posts")) || [];
+      posts.push({
+        owner: currentUser,
+        title,
+        text: desc,
+        imgData,
+        files: otherFiles,
+        section: dest
+      });
+      localStorage.setItem("posts", JSON.stringify(posts));
+
+      // Reset campi
+      document.querySelector(".upload-title").value = "";
+      document.querySelector(".upload-desc").value = "";
+      fileInput.value = "";
+      previewDiv.style.display = "none";
+
+      if(sections[dest]) showPosts();
+      alert("Caricato con successo!");
+    }
+
+    if(imgFile) {
+      const reader = new FileReader();
+      reader.onload = e => savePost(e.target.result);
+      reader.readAsDataURL(imgFile);
+    } else savePost(null);
+  });
+
+  /* =====================
+     INIT
+  ===================== */
   updateSidebar();
-  showSection('dashboard');  // mostra sezione di default
   showPosts();
 });
-
-
