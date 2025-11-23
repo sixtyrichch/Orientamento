@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ELEMENTI PRINCIPALI
 
   const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebar-toggle');
+  const toggleBtn = document.getElementById('mobile-toggle');
   const subjectsDropdown = document.getElementById('subjects-dropdown');
   const subjectsToggle = document.getElementById('subjects-toggle');
   const secondaryNav = document.querySelector('.secondary-nav');
@@ -21,9 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // UTENTI AUTORIZZATI E LOGIN
 
   let users = JSON.parse(localStorage.getItem("users")) || [
-    { email:"admin", password:"davinci2026", canUpload:true },
-    { email:"bb", password:"bb", canUpload:true }
+    { email:"maurizio.minissale@davincimilazzo.edu.it", password:"davinci2026", name:"Prof. Minissale", canUpload:true },
+    { email:"rosatina.artigliere@davincimilazzo.edu.it", password:"davinci2026", name:"Prof. Artigliere", canUpload:true },
+    { email:"antonio.caristia@davincimilazzo.edu.it", password:"davinci2026", name:"Prof. Caristia", canUpload:true }
   ];
+
 
   let currentUser = localStorage.getItem("email");
 
@@ -120,9 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // SIDEBAR TOGGLE
   toggleBtn?.addEventListener("click", () => {
-    sidebar.classList.toggle("collapsed");
-    subjectsDropdown?.classList.remove("open");
+    const nav = document.querySelector(".sidebar-nav");
+    nav.classList.toggle("show");  // PER MOBILE
+    sidebar.classList.toggle("open-mobile"); // PER ANIMAZIONE / OPZIONALE
   });
+
 
   subjectsToggle?.addEventListener("click", e => {
     e.preventDefault();
@@ -133,52 +137,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // PODT
   function showPosts() {
-    const posts = JSON.parse(localStorage.getItem("posts")) || [];
-    Object.values(sections).forEach(sec => sec.querySelectorAll('.post-card').forEach(c => c.remove()));
+  const posts = JSON.parse(localStorage.getItem("posts")) || [];
+  Object.values(sections).forEach(sec => sec.querySelectorAll('.post-card').forEach(c => c.remove()));
 
-    posts.forEach((post, index) => {
-      const sectionDiv = sections[post.section];
-      if(!sectionDiv) return;
+  posts.forEach((post, index) => {
+    const sectionDiv = sections[post.section];
+    if(!sectionDiv) return;
 
-      const div = document.createElement("div");
-      div.classList.add("post-card");
+    const div = document.createElement("div");
+    div.classList.add("post-card");
 
-      let fileHTML = "";
-      if(post.files && post.files.length) {
-        fileHTML = '<div class="post-files" style="display:flex; gap:10px; flex-wrap:wrap;">';
-        post.files.forEach(file => {
-          let icon = "❓";
-          if(file.type.startsWith("audio/")) icon = "🎵";
-          else if(file.type.startsWith("video/")) icon = "🎥";
-          else if(file.type.startsWith("image/")) icon = "🖼️";
+    let fileHTML = "";
+    if(post.files && post.files.length) {
+      fileHTML = '<div class="post-files" style="display:flex; gap:10px; flex-wrap:wrap;">';
+      post.files.forEach(file => {
+        let icon = "❓";
+        if(file.type.startsWith("audio/")) icon = "🎵";
+        else if(file.type.startsWith("video/")) icon = "🎥";
+        else if(file.type.startsWith("image/")) icon = "🖼️";
 
-          fileHTML += `<a href="${file.data}" download="${file.name}" title="${file.name}" class="file-link" style="font-size:2rem; text-decoration:none;">${icon}</a>`;
-        });
-        fileHTML += "</div>";
-      }
-
-      div.innerHTML = `
-        <div class="post-content">
-          <div class="post-title">${post.title || "Senza titolo"}</div>
-          <div class="post-text"><strong>${post.owner}</strong>: ${post.text}</div>
-        </div>
-        ${post.imgData ? `<div class="post-img"><img src="${post.imgData}" alt="Post Image"></div>` : fileHTML}
-        ${currentUser === "admin" ? `<button data-index="${index}" class="delete-btn">Elimina</button>` : ""}
-      `;
-
-      sectionDiv.appendChild(div);
-    });
-
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", e => {
-        const idx = parseInt(e.target.dataset.index);
-        let posts = JSON.parse(localStorage.getItem("posts"));
-        posts.splice(idx, 1);
-        localStorage.setItem("posts", JSON.stringify(posts));
-        showPosts();
+        fileHTML += `<a href="${file.data}" download="${file.name}" title="${file.name}" class="file-link" style="font-size:2rem; text-decoration:none;">${icon}</a>`;
       });
+      fileHTML += "</div>";
+    }
+
+    const canDelete = post.ownerEmail === currentUser;
+
+    div.innerHTML = `
+      <div class="post-content">
+        <div class="post-title">${post.title || "Senza titolo"}</div>
+        <div class="post-text"><strong>${post.ownerName}</strong>: ${post.text}</div>
+      </div>
+      ${post.imgData ? `<div class="post-img"><img src="${post.imgData}" alt="Post Image"></div>` : fileHTML}
+      ${canDelete ? `<button data-index="${index}" class="delete-btn">Elimina</button>` : ""}
+    `;
+
+    sectionDiv.appendChild(div);
+  });
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const idx = parseInt(e.target.dataset.index);
+      let posts = JSON.parse(localStorage.getItem("posts"));
+      posts.splice(idx, 1);
+      localStorage.setItem("posts", JSON.stringify(posts));
+      showPosts();
     });
-  }
+  });
+}
 
   // UPLOAD
 
@@ -186,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileInput = document.querySelector(".upload-file");
   const previewDiv = document.querySelector(".upload-preview");
   const previewImg = document.getElementById("preview-img");
+  const userObj = users.find(u => u.email === currentUser);
 
   fileInput?.addEventListener("change", e => {
     const files = e.target.files;
@@ -229,7 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function savePost(imgData = null) {
       const posts = JSON.parse(localStorage.getItem("posts")) || [];
       posts.push({
-        owner: currentUser,
+        ownerName: userObj ? userObj.name : currentUser,
+        ownerEmail: currentUser,
         title,
         text: desc,
         imgData,

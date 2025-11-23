@@ -355,6 +355,11 @@ body {
   color: #fff;
 }
 
+.sidebar.open-mobile .sidebar-nav {
+  display: flex !important;
+}
+
+
 /* Responsive */
 
 @media (max-width: 600px) {
