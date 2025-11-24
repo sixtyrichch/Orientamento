@@ -1,2 +1,3 @@
-admin,davinci2026
-bb,bb
+email:"maurizio.minissale@davincimilazzo.edu.it", password:"davinci2026",
+email:"rosita.artigliere@davincimilazzo.edu.it", password:"davinci2026",
+email:"antonio.caristia@davincimilazzo.edu.it", password:"davinci2026",
