@@ -1,0 +1,65 @@
+[
+    {
+        "id": 1763996948,
+        "title": "gv",
+        "text": "g",
+        "section": "Turismo\/Info_Tur",
+        "sector": "Turismo",
+        "subject": "Info_Tur",
+        "ownerName": "Prof. Minissale",
+        "ownerEmail": "maurizio.minissale@davincimilazzo.edu.it",
+        "files": [
+            {
+                "name": "book.jpg",
+                "type": "image\/jpeg",
+                "data": "uploads\/1765470540_book.jpg"
+            }
+        ],
+        "timestamp": 1765470540
+    },
+    {
+        "id": 1763996548,
+        "title": "Trasmissione e Ricezione",
+        "text": "La trasmissione e la ricezione sono i due processi fondamentali...",
+        "section": "telec",
+        "files": [
+            {
+                "name": "sistema-di-telecomunicazioni.gif",
+                "type": "image\/gif",
+                "data": "uploads\/sistema-di-telecomunicazioni.gif"
+            }
+        ],
+        "ownerName": "Prof. Artigliere",
+        "ownerEmail": "rosita.artigliere@davincimilazzo.edu.it"
+    },
+    {
+        "id": 1763996794,
+        "title": "L'Hardware",
+        "text": "L'hardware è l'insieme di tutte le parti fisiche...",
+        "section": "tecn",
+        "files": [
+            {
+                "name": "640x360.jpg",
+                "type": "image\/jpeg",
+                "data": "uploads\/640x360.jpg"
+            }
+        ],
+        "ownerName": "Prof. Minissale",
+        "ownerEmail": "maurizio.minissale@davincimilazzo.edu.it"
+    },
+    {
+        "id": 1763996947,
+        "title": "HTML e CSS",
+        "text": "HTML e CSS sono due linguaggi fondamentali...",
+        "section": "info",
+        "files": [
+            {
+                "name": "html5-css3-hd.jpg",
+                "type": "image\/jpeg",
+                "data": "uploads\/html5-css3-hd.jpg"
+            }
+        ],
+        "ownerName": "Prof. Caristia",
+        "ownerEmail": "antonio.caristia@davincimilazzo.edu.it"
+    }
+]

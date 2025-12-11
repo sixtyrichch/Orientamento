@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1763996948,
+        "title": "gv",
+        "text": "g",
+        "section": "Turismo\/Info_Tur",
+        "sector": "Turismo",
+        "subject": "Info_Tur",
+        "ownerName": "Prof. Minissale",
+        "ownerEmail": "maurizio.minissale@davincimilazzo.edu.it",
+        "files": [
+            {
+                "name": "book.jpg",
+                "type": "image\/jpeg",
+                "data": "uploads\/1765470540_book.jpg"
+            }
+        ],
+        "timestamp": 1765470540
+    }
+]

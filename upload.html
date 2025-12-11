@@ -1,0 +1,172 @@
+<a href="Home.html">Home</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orientamento - StudyNow</title>
+  <link rel="icon" href="logo.jpg" type="image/png">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="auth-modal" style="display:none;">
+    <div class="auth-modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Accedi</h2>
+        <button id="close-modal" class="close-modal">&times;</button>
+      </div>
+      <input type="text" id="email" placeholder="E-mail" />
+      <input type="password" id="password" placeholder="Password" />
+      <div class="auth-buttons">
+        <button id="submit-btn">Accedi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <header class="sidebar-header">
+      <img src="logo.jpg" alt="Logo" />
+      <span class="mobile-toggle" id="mobile-toggle">&#9776;</span>
+    </header>
+    <nav class="sidebar-nav">
+      <ul class="nav-list primary-nav">
+        <li class="nav-item">
+          <a href="dashboard.html" class="nav-link">
+            <span class="material-symbols-rounded">dashboard</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item dropdown subjects-dropdown" id="subjects-dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="subjects-toggle">
+            <span class="material-symbols-rounded">menu_book</span>
+            <span class="nav-label">Settori</span>
+          </a>
+          <ul class="dropdown-menu" id="subjects-menu">
+            <li><a href=".\Amministrazione,_finanza_e_marketing\Dashboard_Afm.html" class="dropdown-item">Amministrazione, finanza e marketing</a></li>
+            <li><a href=".\Turismo\Dashboard_Tur.html" class="dropdown-item">Turismo</a></li>
+            <li><a href=".\Costruzione,_ambiente_e_territorio\Dashboard_Cat.html" class="dropdown-item">Costruzione, ambiente e territorio</a></li>
+            <li><a href=".\Informatica_e_telecomunicazioni\Dashboard_Inf.html" class="dropdown-item">Informatica e Telecomunicazioni</a></li>
+            <li><a href=".\Grafica_e_comunicazione\Dashboard_Graf.html" class="dropdown-item">Grafica e comunicazione</a></li>
+            <li><a href=".\Trasporti_e_logistica\Dashboard_Trasp_Logi.html" class="dropdown-item">Trasporti e logistica</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav-list secondary-nav" style="margin-top:auto;"></ul>
+    </nav>
+  </aside>
+
+  <!-- Upload Section -->
+  <div id="upload-section" class="section upload-section">
+    <div class="upload-card">
+      <h3>Carica Contenuti</h3>
+      <input type="text" class="upload-title" placeholder="Titolo..." />
+      <textarea class="upload-desc" placeholder="Descrizione..."></textarea>
+      <input type="file" class="upload-file" name="files[]" multiple />
+      <div class="upload-preview" style="display:none;">
+        <img id="preview-img" alt="Anteprima" />
+      </div>
+      <select id="sector" class="upload-destination" required>
+        <option value="">Seleziona il settore</option>
+      </select>
+
+      <select id="subject" name="subject" required>
+        <option value="">Seleziona la materia</option>
+      </select>
+
+      <button class="upload-btn">Carica</button>
+    </div>
+  </div>
+
+  <script src="script2.js"></script>
+<script>
+// SETTORI REALI
+const sectors = {
+  "Informatica_e_telecomunicazioni": [
+    "Sist_Reti", "Info", "Tpsi", "Telec", "Gest_prog"
+  ],
+  "Amministrazione,_finanza_e_marketing": [
+    "Econ_aziend","Diritto","Info_AFM","Second_ling_com_AFM","Econ_pol"
+  ],
+  "Turismo": [
+    "Geog_tur","Second_ling_com","Terz_ling_com","Info_Tur",
+    "Disci_tur_aziend","Arte_terri","Econ_aziend","Diritto_legis_tur"
+  ],
+  "Costruzione,_ambiente_e_territorio": [
+    "Topo","Geop_ecom_est","Prog_costr_imp","Gest_cant_sicur_lav"
+  ],
+  "Grafica_e_comunicazione": [
+    "Lab_tecn","Teor_com","Proget_mult",
+    "Tecn_prog_prod","Orga_gest_proc_prod"
+  ],
+  "Trasporti_e_logistica": [
+    "Logistica","Scienze_nav","Mecca_macchi"
+  ]
+};
+
+function prettyLabel(name){
+  return name.replace(/_/g," ").replace(/,/g,", ");
+}
+
+const sectorSelect = document.getElementById("sector");
+const subjectselect = document.getElementById("subject");
+
+sectorSelect.innerHTML = '<option value="">Seleziona il settore</option>';
+Object.keys(sectors).forEach(sec => {
+  const opt = document.createElement("option");
+  opt.value = sec;
+  opt.textContent = prettyLabel(sec);
+  sectorSelect.appendChild(opt);
+});
+
+sectorSelect.addEventListener("change", function(){
+  subjectselect.innerHTML = '<option value="">Seleziona la materia</option>';
+  const list = sectors[this.value] || [];
+  list.forEach(sub => {
+    const o = document.createElement("option");
+    o.value = sub;
+    o.textContent = prettyLabel(sub);
+    subjectselect.appendChild(o);
+  });
+});
+
+fetch("upload.php", {
+    method: "POST",
+    body: fd
+})
+.then(r => r.json())   // <-- una volta corretto il PHP deve restare JSON
+.then(resp => {
+    console.log("RISPOSTA:", resp);
+    if(resp.status === "success") alert("Caricamento ok!");
+    else alert("Errore: " + resp.message);
+})
+.catch(err => console.error("Errore fetch:", err));
+
+</script>
+
+<script>
+(function() {
+    const path = window.location.pathname.split("/").filter(Boolean);
+
+    // Il progetto è SEMPRE nella prima cartella dopo localhost → "b"
+    const projectFolder = path[0]; // <-- QUI otteniamo "b"
+
+    // Percorso assoluto corretto per global.js
+    const scriptPath = "/" + projectFolder + "/global.js";
+
+    // Carichiamo il file davvero dal percorso corretto
+    const script = document.createElement("script");
+    script.src = scriptPath;
+    document.body.appendChild(script);
+
+    // Base URL per delete_post.php
+    window.__BASE_URL = "/" + projectFolder + "/";
+})();
+</script>
+
+
+</body>
+</html>
