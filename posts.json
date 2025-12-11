@@ -1,5 +1,23 @@
 [
     {
+        "id": 1763996949,
+        "title": "a",
+        "text": "aa",
+        "section": "Informatica_e_telecomunicazioni\/Sistemi e Reti",
+        "sector": "Informatica_e_telecomunicazioni",
+        "subject": "Sistemi e Reti",
+        "ownerName": "Prof. Minissale",
+        "ownerEmail": "maurizio.minissale@davincimilazzo.edu.it",
+        "files": [
+            {
+                "name": "Git-2.52.0-64-bit.exe",
+                "type": "application\/x-msdownload",
+                "data": "uploads\/1765484574_Git-2.52.0-64-bit.exe"
+            }
+        ],
+        "timestamp": 1765484574
+    },
+    {
         "id": 1763996948,
         "title": "gv",
         "text": "g",
@@ -35,7 +53,7 @@
     {
         "id": 1763996794,
         "title": "L'Hardware",
-        "text": "L'hardware \u00e8 l'insieme di tutte le parti fisiche e tangibili di un sistema informatico, come computer, smartphone o altri dispositivi elettronici. \u00c8 composto da componenti come la scheda madre, la CPU (unit\u00e0 di elaborazione centrale), la memoria (RAM), l'hard disk, le schede video e le periferiche come tastiere, mouse e monitor. L'hardware fornisce la base fisica necessaria per far funzionare il software, che \u00e8 la parte intangibile del sistema.",
+        "text": "L'hardware è l'insieme di tutte le parti fisiche e tangibili di un sistema informatico, come computer, smartphone o altri dispositivi elettronici. È composto da componenti come la scheda madre, la CPU (unità di elaborazione centrale), la memoria (RAM), l'hard disk, le schede video e le periferiche come tastiere, mouse e monitor. L'hardware fornisce la base fisica necessaria per far funzionare il software, che è la parte intangibile del sistema.",
         "section": "tecn",
         "files": [
             {
