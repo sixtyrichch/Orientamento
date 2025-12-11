@@ -58,4 +58,3 @@ foreach ($it as $file) {
 
 echo json_encode(['status'=>'ok']);
 exit;
-?>

@@ -1,3 +1,4 @@
+
 // script.js (sostituisci interamente il file)
 document.addEventListener('DOMContentLoaded', () => {
   // --- CONFIG / SELECTORS ---

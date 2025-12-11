@@ -35,7 +35,7 @@
     {
         "id": 1763996794,
         "title": "L'Hardware",
-        "text": "L'hardware è l'insieme di tutte le parti fisiche...",
+        "text": "L'hardware \u00e8 l'insieme di tutte le parti fisiche e tangibili di un sistema informatico, come computer, smartphone o altri dispositivi elettronici. \u00c8 composto da componenti come la scheda madre, la CPU (unit\u00e0 di elaborazione centrale), la memoria (RAM), l'hard disk, le schede video e le periferiche come tastiere, mouse e monitor. L'hardware fornisce la base fisica necessaria per far funzionare il software, che \u00e8 la parte intangibile del sistema.",
         "section": "tecn",
         "files": [
             {
@@ -50,7 +50,7 @@
     {
         "id": 1763996947,
         "title": "HTML e CSS",
-        "text": "HTML e CSS sono due linguaggi fondamentali...",
+        "text": "HTML e CSS sono due linguaggi fondamentali per la creazione di siti web: HTML definisce la struttura e il contenuto di una pagina web, mentre CSS ne controlla l'aspetto visivo (colori, layout, font, ecc.). L'HTML fornisce lo scheletro e il contenuto, mentre il CSS lo veste, rendendolo accattivante e reattivo su diversi dispositivi.",
         "section": "info",
         "files": [
             {
