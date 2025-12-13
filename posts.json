@@ -1,41 +1,5 @@
 [
     {
-        "id": 1763996949,
-        "title": "a",
-        "text": "aa",
-        "section": "Informatica_e_telecomunicazioni\/Sistemi e Reti",
-        "sector": "Informatica_e_telecomunicazioni",
-        "subject": "Sistemi e Reti",
-        "ownerName": "Prof. Minissale",
-        "ownerEmail": "maurizio.minissale@davincimilazzo.edu.it",
-        "files": [
-            {
-                "name": "Git-2.52.0-64-bit.exe",
-                "type": "application\/x-msdownload",
-                "data": "uploads\/1765484574_Git-2.52.0-64-bit.exe"
-            }
-        ],
-        "timestamp": 1765484574
-    },
-    {
-        "id": 1763996948,
-        "title": "gv",
-        "text": "g",
-        "section": "Turismo\/Info_Tur",
-        "sector": "Turismo",
-        "subject": "Info_Tur",
-        "ownerName": "Prof. Minissale",
-        "ownerEmail": "maurizio.minissale@davincimilazzo.edu.it",
-        "files": [
-            {
-                "name": "book.jpg",
-                "type": "image\/jpeg",
-                "data": "uploads\/1765470540_book.jpg"
-            }
-        ],
-        "timestamp": 1765470540
-    },
-    {
         "id": 1763996548,
         "title": "Trasmissione e Ricezione",
         "text": "La trasmissione e la ricezione sono i due processi fondamentali...",

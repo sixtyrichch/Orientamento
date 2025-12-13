@@ -92,27 +92,55 @@
 <script>
 // SETTORI REALI
 const sectors = {
-  "Informatica_e_telecomunicazioni": [
-    "Sistemi e Reti", "Info", "Tpsi", "Telec", "Gest_prog"
-  ],
   "Amministrazione,_finanza_e_marketing": [
-    "Econ_aziend","Diritto","Info_AFM","Second_ling_com_AFM","Econ_pol"
+    { value: "Econ_aziend", label: "Economia Aziendale" },
+    { value: "Diritto", label: "Diritto" },
+    { value: "Info_AFM", label: "Informatica" },
+    { value: "Second_ling_com_AFM", label: "Seconda Lingua Comunitaria" },
+    { value: "Econ_pol", label: "Economia Politica" }
   ],
+
   "Turismo": [
-    "Geog_tur","Second_ling_com","Terz_ling_com","Info_Tur",
-    "Disci_tur_aziend","Arte_terri","Econ_aziend","Diritto_legis_tur"
+    { value: "Geog_tur", label: "Geografia Turistica" },
+    { value: "Second_ling_com", label: "Seconda Lingua Comunitaria" },
+    { value: "Terz_ling_com", label: "Terza Lingua Comunitaria" },
+    { value: "Info_Tur", label: "Informatica" },
+    { value: "Disci_tur_aziend", label: "Discipline Turistiche Aziendali" },
+    { value: "Arte_terri", label: "Arte e Territorio" },
+    { value: "Econ_aziend", label: "Economia Aziendale" },
+    { value: "Diritto_legis_tur", label: "Diritto e Legislazione Turistica" }
   ],
+
   "Costruzione,_ambiente_e_territorio": [
-    "Topo","Geop_ecom_est","Prog_costr_imp","Gest_cant_sicur_lav"
+    { value: "Topo", label: "Topografia" },
+    { value: "Geop_ecom_est", label: "Geopedologia ed Economia Estimativa" },
+    { value: "Prog_costr_imp", label: "Progettazione Costruzioni e Impianti" },
+    { value: "Gest_cant_sicur_lav", label: "Gestione del Cantiere e Sicurezza" }
   ],
+
+  "Informatica_e_telecomunicazioni": [
+    { value: "Sist_Reti", label: "Sistemi e Reti" },
+    { value: "Info", label: "Informatica" },
+    { value: "Tpsi", label: "Tecnologie e progettazione di sistemi informatici e di telecomunicazioni" },
+    { value: "Telec", label: "Telecomunicazioni" },
+    { value: "Gest_prog", label: "Gestione Progetto, organizzazione d'impresa" }
+  ],
+
   "Grafica_e_comunicazione": [
-    "Lab_tecn","Teor_com","Proget_mult",
-    "Tecn_prog_prod","Orga_gest_proc_prod"
+    { value: "Lab_tecn", label: "Laboratori Tecnici" },
+    { value: "Teor_com", label: "Teoria della Comunicazione" },
+    { value: "Proget_mult", label: "Progettazione Multimediale" },
+    { value: "Tecn_prog_prod", label: "Tecnologie e Processi di Produzione" },
+    { value: "Orga_gest_proc_prod", label: "Organizzazione e Gestione Processi Produttivi" }
   ],
+
   "Trasporti_e_logistica": [
-    "Logistica","Scienze_nav","Mecca_macchi"
+    { value: "Logistica", label: "Logistica" },
+    { value: "Scienze_nav", label: "Scienze della Navigazione" },
+    { value: "Mecca_macchi", label: "Meccanica e Macchine" }
   ]
 };
+
 
 function prettyLabel(name){
   return name.replace(/_/g," ").replace(/,/g,", ");
@@ -133,11 +161,11 @@ sectorSelect.addEventListener("change", function(){
   subjectselect.innerHTML = '<option value="">Seleziona la materia</option>';
   const list = sectors[this.value] || [];
   list.forEach(sub => {
-    const o = document.createElement("option");
-    o.value = sub;
-    o.textContent = prettyLabel(sub);
-    subjectselect.appendChild(o);
-  });
+  const o = document.createElement("option");
+  o.value = sub.value;        // valore tecnico (immutabile)
+  o.textContent = sub.label;  // nome visibile (personalizzabile)
+  subjectselect.appendChild(o);
+});
 });
 
 fetch("upload.php", {
