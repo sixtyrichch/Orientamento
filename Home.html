@@ -87,18 +87,14 @@ fetch("Home_posts.json")
 (function() {
     const path = window.location.pathname.split("/").filter(Boolean);
 
-    // Il progetto è SEMPRE nella prima cartella dopo localhost → "b"
-    const projectFolder = path[0]; // <-- QUI otteniamo "b"
+    const projectFolder = path[0];
 
-    // Percorso assoluto corretto per global.js
     const scriptPath = "/" + projectFolder + "/global.js";
 
-    // Carichiamo il file davvero dal percorso corretto
     const script = document.createElement("script");
     script.src = scriptPath;
     document.body.appendChild(script);
 
-    // Base URL per delete_post.php
     window.__BASE_URL = "/" + projectFolder + "/";
 })();
 </script>
